@@ -22,7 +22,7 @@ title: sc_alexp
 email: sc_alexp@iastate.edu
 description: >- # this means to ignore newlines until "baseurl:"
   Website used to create tools for working at the Iowa State Solution Center.
-url: "https://sc_alexp.github.io" # the base hostname & protocol for your site, e.g. http://example.com
+url: "https://sc-alexp.github.io" # the base hostname & protocol for your site, e.g. http://example.com
 # Build settings
 plugins:
   - jekyll-feed
