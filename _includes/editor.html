@@ -148,11 +148,7 @@
     </button>
   </div>
 </div>
-<textarea
-  class="form-control w-100 h-100"
-  id="exampleFormControlTextarea1"
-  rows="3"
-></textarea>
+<textarea class="form-control w-100" id="editor-textarea"></textarea>
 <script>
   document.addEventListener("DOMContentLoaded", function () {
     var tooltipTriggerList = [].slice.call(
@@ -161,5 +157,34 @@
     var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
       return new bootstrap.Tooltip(tooltipTriggerEl);
     });
+  });
+
+  function adjustTextareaHeight() {
+    const navbarHeight = document.querySelector(".navbar").offsetHeight;
+    const buttonGroupHeight =
+      document.querySelector(".fixed-bottom").offsetHeight;
+    const viewportHeight = window.innerHeight;
+    const availableHeight = viewportHeight - navbarHeight - buttonGroupHeight;
+
+    document.getElementById("editor-textarea").style.height =
+      availableHeight + "px";
+  }
+
+  // Adjust the textarea height on page load and when the window is resized
+  window.addEventListener("load", adjustTextareaHeight);
+  window.addEventListener("resize", adjustTextareaHeight);
+
+  document.getElementById("btn-cols-1").addEventListener("click", function () {
+    var dynamicRow = document.getElementById("dynamic-row");
+    dynamicRow.classList.remove("row-cols-2");
+    dynamicRow.classList.add("row-cols-1");
+    adjustTextareaHeight(); // Re-adjust height
+  });
+
+  document.getElementById("btn-cols-2").addEventListener("click", function () {
+    var dynamicRow = document.getElementById("dynamic-row");
+    dynamicRow.classList.remove("row-cols-1");
+    dynamicRow.classList.add("row-cols-2");
+    adjustTextareaHeight(); // Re-adjust height
   });
 </script>
