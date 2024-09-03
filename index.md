@@ -3,6 +3,8 @@ layout: skeleton
 title: Editor
 ---
 
+<script src="https://cdn.jsdelivr.net/npm/showdown@1.9.1/dist/showdown.min.js"></script>
+
 <div id="dynamic-row" class="row w-100 row-cols-1">
   <div class="col px-0">{% include editor.html %}</div>
   <div class="col px-0 preview">{% include preview.html %}</div>
@@ -52,4 +54,30 @@ title: Editor
     dynamicRow.classList.remove("row-cols-1");
     dynamicRow.classList.add("row-cols-2");
   });
-</script>
+
+      document.addEventListener("DOMContentLoaded", function () {
+        // Initialize Bootstrap tooltips
+        var tooltipTriggerList = [].slice.call(
+          document.querySelectorAll('[data-bs-toggle="tooltip"]')
+        );
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+          return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+
+        // Initialize Showdown converter
+        var converter = new showdown.Converter();
+
+        // Function to update preview
+        function updatePreview() {
+          var markdownText = document.getElementById("editor-textarea").value;
+          var html = converter.makeHtml(markdownText);
+          document.getElementById("preview-content").innerHTML = html;
+        }
+
+        // Attach event listener to the textarea
+        document.getElementById("editor-textarea").addEventListener("input", updatePreview);
+
+        // Initial call to render any default content
+        updatePreview();
+      });
+    </script>

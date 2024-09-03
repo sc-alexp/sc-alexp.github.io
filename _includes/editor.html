@@ -148,7 +148,9 @@
     </button>
   </div>
 </div>
-<textarea class="form-control w-100" id="editor-textarea"></textarea>
+<div class="w-100 px-5">
+  <textarea class="form-control w-100" id="editor-textarea"></textarea>
+</div>
 <script>
   document.addEventListener("DOMContentLoaded", function () {
     var tooltipTriggerList = [].slice.call(
@@ -163,7 +165,7 @@
     const navbarHeight = document.querySelector(".navbar").offsetHeight;
     const buttonGroupHeight =
       document.querySelector(".fixed-bottom").offsetHeight;
-    const viewportHeight = window.innerHeight;
+    const viewportHeight = window.innerHeight / 2;
     const availableHeight = viewportHeight - navbarHeight - buttonGroupHeight;
 
     document.getElementById("editor-textarea").style.height =
