@@ -66,6 +66,7 @@ title: Editor
 
         // Initialize Showdown converter
         var converter = new showdown.Converter();
+        converter.setOption('simpleLineBreaks', 'true');
 
         // Function to update preview
         function updatePreview() {

@@ -7,6 +7,7 @@
       data-bs-placement="bottom"
       data-bs-custom-class="custom-tooltip"
       data-bs-title="Bold"
+      onClick="applyBold()"
     >
       <i class="bi bi-type-bold"></i>
     </button>
@@ -17,6 +18,7 @@
       data-bs-placement="bottom"
       data-bs-custom-class="custom-tooltip"
       data-bs-title="Italic"
+      onClick="applyItalics()"
     >
       <i class="bi bi-type-italic"></i>
     </button>
@@ -27,6 +29,7 @@
       data-bs-placement="bottom"
       data-bs-custom-class="custom-tooltip"
       data-bs-title="Underline"
+      onClick="applyUnderline()"
     >
       <i class="bi bi-type-underline"></i>
     </button>
@@ -71,6 +74,7 @@
       data-bs-placement="bottom"
       data-bs-custom-class="custom-tooltip"
       data-bs-title="Align Left"
+      onClick="alignLeft()"
     >
       <i class="bi bi-text-left"></i>
     </button>
@@ -81,6 +85,7 @@
       data-bs-placement="bottom"
       data-bs-custom-class="custom-tooltip"
       data-bs-title="Align Center"
+      onClick="alignCenter()"
     >
       <i class="bi bi-text-center"></i>
     </button>
@@ -91,6 +96,7 @@
       data-bs-placement="bottom"
       data-bs-custom-class="custom-tooltip"
       data-bs-title="Align Right"
+      onClick="alignRight()"
     >
       <i class="bi bi-text-right"></i>
     </button>
@@ -189,4 +195,190 @@
     dynamicRow.classList.add("row-cols-2");
     adjustTextareaHeight(); // Re-adjust height
   });
+
+  /* Button functionality */
+  function applyBold() {
+    const textarea = document.getElementById("editor-textarea");
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const selectedText = textarea.value.substring(start, end);
+
+    // Surround the selected text with **
+    const newText = `**${selectedText}**`;
+
+    // Replace the selected text with the new text
+    textarea.value =
+      textarea.value.substring(0, start) +
+      newText +
+      textarea.value.substring(end);
+
+    // Adjust the selection to keep the text selected
+    textarea.selectionStart = start;
+    textarea.selectionEnd = start + newText.length;
+
+    textarea.dispatchEvent(new Event("input"));
+    // Focus back on the textarea
+    textarea.focus();
+  }
+
+  document.addEventListener("DOMContentLoaded", function () {
+    const textarea = document.getElementById("editor-textarea");
+    console.log(textarea); // Ensure this logs the textarea element
+    if (textarea) {
+      textarea.addEventListener("keydown", function (event) {
+        console.log("Keydown detected"); // This should log when you press any key in the textarea
+        if (event.ctrlKey && event.key.toLowerCase() === "b") {
+          event.preventDefault(); // Prevent the default browser behavior
+          applyBold(); // Call the applyBold function
+        }
+      });
+    }
+  });
+
+  function applyItalics() {
+    const textarea = document.getElementById("editor-textarea");
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const selectedText = textarea.value.substring(start, end);
+
+    // Surround the selected text with **
+    const newText = `*${selectedText}*`;
+
+    // Replace the selected text with the new text
+    textarea.value =
+      textarea.value.substring(0, start) +
+      newText +
+      textarea.value.substring(end);
+
+    // Adjust the selection to keep the text selected
+    textarea.selectionStart = start;
+    textarea.selectionEnd = start + newText.length;
+
+    textarea.dispatchEvent(new Event("input"));
+    // Focus back on the textarea
+    textarea.focus();
+  }
+
+  function applyUnderline() {
+    const textarea = document.getElementById("editor-textarea");
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const selectedText = textarea.value.substring(start, end);
+
+    // Surround the selected text with **
+    const newText = `<u>${selectedText}</u>`;
+
+    // Replace the selected text with the new text
+    textarea.value =
+      textarea.value.substring(0, start) +
+      newText +
+      textarea.value.substring(end);
+
+    // Adjust the selection to keep the text selected
+    textarea.selectionStart = start;
+    textarea.selectionEnd = start + newText.length;
+
+    textarea.dispatchEvent(new Event("input"));
+    // Focus back on the textarea
+    textarea.focus();
+  }
+
+  function alignLeft() {
+    const textarea = document.getElementById("editor-textarea");
+    const value = textarea.value;
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+
+    // Find the start of the line where the cursor or selection begins
+    const lineStart = value.lastIndexOf("\n", start) + 1;
+    // Find the end of the line where the cursor or selection ends
+    const lineEnd = value.indexOf("\n", end);
+
+    // If lineEnd is -1, it means the selection is till the last line
+    const actualLineEnd = lineEnd === -1 ? value.length : lineEnd;
+
+    // Extract the selected lines
+    const selectedText = value.substring(lineStart, actualLineEnd);
+
+    // Wrap the selected lines with the left align div
+    const newText = `<div style="text-align: left; width: 100%">${selectedText}</div>`;
+
+    // Replace the selected lines with the new aligned text
+    textarea.value =
+      value.substring(0, lineStart) + newText + value.substring(actualLineEnd);
+
+    // Adjust the selection to keep the text selected
+    textarea.selectionStart = lineStart;
+    textarea.selectionEnd = lineStart + newText.length;
+
+    textarea.dispatchEvent(new Event("input"));
+    // Focus back on the textarea
+    textarea.focus();
+  }
+
+  function alignCenter() {
+    const textarea = document.getElementById("editor-textarea");
+    const value = textarea.value;
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+
+    // Find the start of the line where the cursor or selection begins
+    const lineStart = value.lastIndexOf("\n", start) + 1;
+    // Find the end of the line where the cursor or selection ends
+    const lineEnd = value.indexOf("\n", end);
+
+    // If lineEnd is -1, it means the selection is till the last line
+    const actualLineEnd = lineEnd === -1 ? value.length : lineEnd;
+
+    // Extract the selected lines
+    const selectedText = value.substring(lineStart, actualLineEnd);
+
+    // Wrap the selected lines with the center align div
+    const newText = `<div style="text-align: center; width: 100%">${selectedText}</div>`;
+
+    // Replace the selected lines with the new aligned text
+    textarea.value =
+      value.substring(0, lineStart) + newText + value.substring(actualLineEnd);
+
+    // Adjust the selection to keep the text selected
+    textarea.selectionStart = lineStart;
+    textarea.selectionEnd = lineStart + newText.length;
+
+    textarea.dispatchEvent(new Event("input"));
+    // Focus back on the textarea
+    textarea.focus();
+  }
+
+  function alignRight() {
+    const textarea = document.getElementById("editor-textarea");
+    const value = textarea.value;
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+
+    // Find the start of the line where the cursor or selection begins
+    const lineStart = value.lastIndexOf("\n", start) + 1;
+    // Find the end of the line where the cursor or selection ends
+    const lineEnd = value.indexOf("\n", end);
+
+    // If lineEnd is -1, it means the selection is till the last line
+    const actualLineEnd = lineEnd === -1 ? value.length : lineEnd;
+
+    // Extract the selected lines
+    const selectedText = value.substring(lineStart, actualLineEnd);
+
+    // Wrap the selected lines with the right align div
+    const newText = `<div style="text-align: right; width: 100%">${selectedText}</div>`;
+
+    // Replace the selected lines with the new aligned text
+    textarea.value =
+      value.substring(0, lineStart) + newText + value.substring(actualLineEnd);
+
+    // Adjust the selection to keep the text selected
+    textarea.selectionStart = lineStart;
+    textarea.selectionEnd = lineStart + newText.length;
+
+    textarea.dispatchEvent(new Event("input"));
+    // Focus back on the textarea
+    textarea.focus();
+  }
 </script>
