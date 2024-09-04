@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="32"
+   height="32"
+   viewBox="0 0 8.4666665 8.4666666"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.3.2 (091e20e, 2023-11-25)"
+   sodipodi:docname="sc_alexp.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#505050"
+     bordercolor="#ffffff"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="1"
+     inkscape:deskcolor="#505050"
+     inkscape:document-units="mm"
+     inkscape:zoom="19.797242"
+     inkscape:cx="15.709259"
+     inkscape:cy="14.193897"
+     inkscape:window-width="1656"
+     inkscape:window-height="1041"
+     inkscape:window-x="0"
+     inkscape:window-y="43"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs1" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <text
+       xml:space="preserve"
+       style="font-size:3.97198px;fill:#ffffff;fill-opacity:1;stroke-width:0.297897"
+       x="-0.086385608"
+       y="2.3173079"
+       id="text2"
+       transform="scale(1.1259129,0.88816817)"><tspan
+         sodipodi:role="line"
+         style="font-weight:bold;font-size:3.97198px;stroke-width:0.297897"
+         x="-0.086385608"
+         y="2.3173079"
+         id="tspan6">sc_</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:4.92443px;fill:#ffffff;fill-opacity:1;stroke-width:0.369331"
+       x="4.0247455"
+       y="6.0366731"
+       id="text2-8-0"
+       transform="scale(1.0668061,0.93737743)"><tspan
+         sodipodi:role="line"
+         style="font-weight:bold;font-size:4.92443px;text-align:center;text-anchor:middle;stroke-width:0.369331"
+         x="4.0247459"
+         y="6.0366731"
+         id="tspan8-7">ale</tspan></text>
+    <g
+       id="g1"
+       transform="translate(-1.9052203,1.2987433)">
+      <text
+         xml:space="preserve"
+         style="font-size:4.77388px;fill:#ffffff;fill-opacity:1;stroke-width:0.358039"
+         x="4.6448746"
+         y="8.641593"
+         id="text2-8"
+         transform="scale(1.3416576,0.74534663)"><tspan
+           sodipodi:role="line"
+           style="font-weight:bold;font-size:4.77388px;text-align:center;text-anchor:middle;stroke-width:0.358039"
+           x="4.6448746"
+           y="8.641593"
+           id="tspan8">xp</tspan></text>
+    </g>
+  </g>
+</svg>
