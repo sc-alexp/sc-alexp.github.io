@@ -457,11 +457,8 @@
     // Convert Markdown to HTML using Showdown
     const htmlContent = converter.makeHtml(markdownText);
 
-    // Replace line breaks with <br />
-    const htmlWithLineBreaks = htmlContent.replace(/\n/g, "<br />");
-
     // Wrap the entire HTML content with [code] and [/code]
-    const result = `[code]${htmlWithLineBreaks}[/code]`;
+    const result = `[code]${htmlContent}[/code]`;
 
     // Copy the result to the clipboard
     navigator.clipboard.writeText(result).then(
