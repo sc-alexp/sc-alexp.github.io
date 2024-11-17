@@ -1,4 +1,0 @@
----
-layout: skeleton
-title: Templates
----

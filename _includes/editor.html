@@ -208,8 +208,45 @@
       return new bootstrap.Tooltip(tooltipTriggerEl);
     });
 
-    // Update the preview area (if you have one)
+    // Get the textarea
     const textarea = document.getElementById("editor-textarea");
+
+    // New code to handle templates
+    const urlParams = new URLSearchParams(window.location.search);
+    const template = urlParams.get("template");
+
+    if (template && textarea) {
+      let templateText = "";
+      if (template === "basic") {
+        templateText = `Hello,
+
+Thank you for contacting the ISU ITS Solution Center.
+
+Best,
+[ITS Solution Center](https://www.it.iastate.edu/help)
+
+[![Iowa State University](https://www.iastate.edu/themes/custom/iastate2022/img/iowa-state-university-logo-no-tagline-red.svg)](https://iastate.edu/)`;
+      } else if (template === "callnotes") {
+        templateText = `☎ Call Notes:
+
+- Notes here
+
+End call`;
+      }
+
+      // Set the textarea value
+      textarea.value = templateText;
+
+      // Update the preview
+      const htmlContent = converter.makeHtml(templateText);
+      // Update your preview area if needed
+      // document.getElementById("preview").innerHTML = htmlContent;
+
+      // Alternatively, dispatch an input event to trigger the listener
+      textarea.dispatchEvent(new Event("input"));
+    }
+
+    // Update the preview area (if you have one)
     if (textarea) {
       textarea.addEventListener("input", function () {
         const markdownText = this.value;
@@ -447,6 +484,7 @@
       textarea.value = "";
       textarea.dispatchEvent(new Event("input"));
       textarea.focus();
+      window.location.replace("/");
     }
   }
 
