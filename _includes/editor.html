@@ -196,10 +196,10 @@
   <textarea class="form-control w-100" id="editor-textarea"></textarea>
 </div>
 
-<!-- Include the Marked.js library for Markdown parsing -->
-<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-
 <script>
+  // Initialize the Showdown converter with simpleLineBreaks option
+  const converter = new showdown.Converter({ simpleLineBreaks: true });
+
   document.addEventListener("DOMContentLoaded", function () {
     var tooltipTriggerList = [].slice.call(
       document.querySelectorAll('[data-bs-toggle="tooltip"]')
@@ -207,6 +207,17 @@
     var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
       return new bootstrap.Tooltip(tooltipTriggerEl);
     });
+
+    // Update the preview area (if you have one)
+    const textarea = document.getElementById("editor-textarea");
+    if (textarea) {
+      textarea.addEventListener("input", function () {
+        const markdownText = this.value;
+        const htmlContent = converter.makeHtml(markdownText);
+        // Update your preview area if needed
+        // document.getElementById("preview").innerHTML = htmlContent;
+      });
+    }
   });
 
   function adjustTextareaHeight() {
@@ -229,23 +240,13 @@
     const textarea = document.getElementById("editor-textarea");
     const start = textarea.selectionStart;
     const end = textarea.selectionEnd;
-    const selectedText = textarea.value.substring(start, end);
 
     // Surround the selected text with **
-    const newText = `**${selectedText}**`;
+    const newText = `**${textarea.value.substring(start, end)}**`;
 
-    // Replace the selected text with the new text
-    textarea.value =
-      textarea.value.substring(0, start) +
-      newText +
-      textarea.value.substring(end);
-
-    // Adjust the selection to keep the text selected
-    textarea.selectionStart = start;
-    textarea.selectionEnd = start + newText.length;
+    textarea.setRangeText(newText, start, end, "select");
 
     textarea.dispatchEvent(new Event("input"));
-    // Focus back on the textarea
     textarea.focus();
   }
 
@@ -253,23 +254,13 @@
     const textarea = document.getElementById("editor-textarea");
     const start = textarea.selectionStart;
     const end = textarea.selectionEnd;
-    const selectedText = textarea.value.substring(start, end);
 
     // Surround the selected text with *
-    const newText = `*${selectedText}*`;
+    const newText = `*${textarea.value.substring(start, end)}*`;
 
-    // Replace the selected text with the new text
-    textarea.value =
-      textarea.value.substring(0, start) +
-      newText +
-      textarea.value.substring(end);
-
-    // Adjust the selection to keep the text selected
-    textarea.selectionStart = start;
-    textarea.selectionEnd = start + newText.length;
+    textarea.setRangeText(newText, start, end, "select");
 
     textarea.dispatchEvent(new Event("input"));
-    // Focus back on the textarea
     textarea.focus();
   }
 
@@ -277,27 +268,29 @@
     const textarea = document.getElementById("editor-textarea");
     const start = textarea.selectionStart;
     const end = textarea.selectionEnd;
-    const selectedText = textarea.value.substring(start, end);
 
     // Use HTML <u> tag as Markdown doesn't support underline
-    const newText = `<u>${selectedText}</u>`;
+    const newText = `<u>${textarea.value.substring(start, end)}</u>`;
 
-    // Replace the selected text with the new text
-    textarea.value =
-      textarea.value.substring(0, start) +
-      newText +
-      textarea.value.substring(end);
-
-    // Adjust the selection to keep the text selected
-    textarea.selectionStart = start;
-    textarea.selectionEnd = start + newText.length;
+    textarea.setRangeText(newText, start, end, "select");
 
     textarea.dispatchEvent(new Event("input"));
-    // Focus back on the textarea
     textarea.focus();
   }
 
   function alignLeft() {
+    applyAlignment("left");
+  }
+
+  function alignCenter() {
+    applyAlignment("center");
+  }
+
+  function alignRight() {
+    applyAlignment("right");
+  }
+
+  function applyAlignment(alignment) {
     const textarea = document.getElementById("editor-textarea");
     const value = textarea.value;
     const start = textarea.selectionStart;
@@ -311,61 +304,9 @@
     const selectedText = value.substring(lineStart, actualLineEnd);
 
     // Wrap with HTML div for alignment
-    const newText = `<div style="text-align: left;">${selectedText}</div>`;
+    const newText = `<div style="text-align: ${alignment};">${selectedText}</div>`;
 
-    textarea.value =
-      value.substring(0, lineStart) + newText + value.substring(actualLineEnd);
-
-    textarea.selectionStart = lineStart;
-    textarea.selectionEnd = lineStart + newText.length;
-
-    textarea.dispatchEvent(new Event("input"));
-    textarea.focus();
-  }
-
-  function alignCenter() {
-    const textarea = document.getElementById("editor-textarea");
-    const value = textarea.value;
-    const start = textarea.selectionStart;
-    const end = textarea.selectionEnd;
-
-    const lineStart = value.lastIndexOf("\n", start) + 1;
-    const lineEnd = value.indexOf("\n", end);
-    const actualLineEnd = lineEnd === -1 ? value.length : lineEnd;
-
-    const selectedText = value.substring(lineStart, actualLineEnd);
-
-    const newText = `<div style="text-align: center;">${selectedText}</div>`;
-
-    textarea.value =
-      value.substring(0, lineStart) + newText + value.substring(actualLineEnd);
-
-    textarea.selectionStart = lineStart;
-    textarea.selectionEnd = lineStart + newText.length;
-
-    textarea.dispatchEvent(new Event("input"));
-    textarea.focus();
-  }
-
-  function alignRight() {
-    const textarea = document.getElementById("editor-textarea");
-    const value = textarea.value;
-    const start = textarea.selectionStart;
-    const end = textarea.selectionEnd;
-
-    const lineStart = value.lastIndexOf("\n", start) + 1;
-    const lineEnd = value.indexOf("\n", end);
-    const actualLineEnd = lineEnd === -1 ? value.length : lineEnd;
-
-    const selectedText = value.substring(lineStart, actualLineEnd);
-
-    const newText = `<div style="text-align: right;">${selectedText}</div>`;
-
-    textarea.value =
-      value.substring(0, lineStart) + newText + value.substring(actualLineEnd);
-
-    textarea.selectionStart = lineStart;
-    textarea.selectionEnd = lineStart + newText.length;
+    textarea.setRangeText(newText, lineStart, actualLineEnd, "select");
 
     textarea.dispatchEvent(new Event("input"));
     textarea.focus();
@@ -389,85 +330,41 @@
     // Create the markdown link
     const newText = `[${selectedText}](${url})`;
 
-    // Replace the selected text with the new text
-    textarea.value =
-      textarea.value.substring(0, start) +
-      newText +
-      textarea.value.substring(end);
-
-    // Adjust the selection to the new text
-    textarea.selectionStart = start;
-    textarea.selectionEnd = start + newText.length;
+    textarea.setRangeText(newText, start, end, "select");
 
     textarea.dispatchEvent(new Event("input"));
     textarea.focus();
   }
 
   function applyList() {
-    const textarea = document.getElementById("editor-textarea");
-    const value = textarea.value;
-    const start = textarea.selectionStart;
-    const end = textarea.selectionEnd;
-
-    const lineStart = value.lastIndexOf("\n", start) + 1;
-    const lineEnd = value.indexOf("\n", end);
-    const actualLineEnd = lineEnd === -1 ? value.length : lineEnd;
-
-    const selectedText = value.substring(lineStart, actualLineEnd);
-
-    const lines = selectedText.split("\n");
-
-    const newLines = lines.map((line) => {
-      // Avoid adding '- ' if it's already there
-      if (line.startsWith("- ")) {
-        return line;
-      } else {
-        return "- " + line;
-      }
-    });
-
-    const newText = newLines.join("\n");
-
-    textarea.value =
-      value.substring(0, lineStart) + newText + value.substring(actualLineEnd);
-
-    textarea.selectionStart = lineStart;
-    textarea.selectionEnd = lineStart + newText.length;
-
-    textarea.dispatchEvent(new Event("input"));
-    textarea.focus();
+    applyListStyle("- ");
   }
 
   function applyNumberedList() {
+    applyListStyle("1. ", true);
+  }
+
+  function applyListStyle(prefix, isNumbered = false) {
     const textarea = document.getElementById("editor-textarea");
     const value = textarea.value;
     const start = textarea.selectionStart;
     const end = textarea.selectionEnd;
 
-    const lineStart = value.lastIndexOf("\n", start) + 1;
-    const lineEnd = value.indexOf("\n", end);
-    const actualLineEnd = lineEnd === -1 ? value.length : lineEnd;
-
-    const selectedText = value.substring(lineStart, actualLineEnd);
+    const selectedText = value.slice(start, end);
 
     const lines = selectedText.split("\n");
 
     const newLines = lines.map((line, index) => {
-      // Check if line already starts with a number
-      if (/^\d+\. /.test(line)) {
-        return line;
+      if (isNumbered) {
+        return `${index + 1}. ${line.replace(/^\d+\. /, "")}`;
       } else {
-        return index + 1 + ". " + line;
+        return `${prefix}${line.replace(/^- /, "")}`;
       }
     });
 
     const newText = newLines.join("\n");
 
-    textarea.value =
-      value.substring(0, lineStart) + newText + value.substring(actualLineEnd);
-
-    textarea.selectionStart = lineStart;
-    textarea.selectionEnd = lineStart + newText.length;
+    textarea.setRangeText(newText, start, end, "select");
 
     textarea.dispatchEvent(new Event("input"));
     textarea.focus();
@@ -477,24 +374,18 @@
     const textarea = document.getElementById("editor-textarea");
     const start = textarea.selectionStart;
     const end = textarea.selectionEnd;
-    const selectedText = textarea.value.substring(start, end);
 
     let imageUrl = prompt("Enter the image URL:");
     if (imageUrl === null) return;
 
     let altText =
-      selectedText || prompt("Enter the alt text:", "image description");
+      textarea.value.substring(start, end) ||
+      prompt("Enter the alt text:", "image description");
     if (altText === null) return;
 
     const newText = `![${altText}](${imageUrl})`;
 
-    textarea.value =
-      textarea.value.substring(0, start) +
-      newText +
-      textarea.value.substring(end);
-
-    textarea.selectionStart = start;
-    textarea.selectionEnd = start + newText.length;
+    textarea.setRangeText(newText, start, end, "select");
 
     textarea.dispatchEvent(new Event("input"));
     textarea.focus();
@@ -502,15 +393,10 @@
 
   function applyHeading(level) {
     const textarea = document.getElementById("editor-textarea");
-    const value = textarea.value;
     const start = textarea.selectionStart;
     const end = textarea.selectionEnd;
 
-    const lineStart = value.lastIndexOf("\n", start) + 1;
-    const lineEnd = value.indexOf("\n", end);
-    const actualLineEnd = lineEnd === -1 ? value.length : lineEnd;
-
-    const selectedText = value.substring(lineStart, actualLineEnd);
+    const selectedText = textarea.value.slice(start, end);
 
     // Remove existing heading markers
     let newText = selectedText.replace(/^#+\s*/, "");
@@ -519,11 +405,7 @@
     const headingPrefix = "#".repeat(level) + " ";
     newText = headingPrefix + newText;
 
-    textarea.value =
-      value.substring(0, lineStart) + newText + value.substring(actualLineEnd);
-
-    textarea.selectionStart = lineStart;
-    textarea.selectionEnd = lineStart + newText.length;
+    textarea.setRangeText(newText, start, end, "select");
 
     textarea.dispatchEvent(new Event("input"));
     textarea.focus();
@@ -531,24 +413,15 @@
 
   function applyNormal() {
     const textarea = document.getElementById("editor-textarea");
-    const value = textarea.value;
     const start = textarea.selectionStart;
     const end = textarea.selectionEnd;
 
-    const lineStart = value.lastIndexOf("\n", start) + 1;
-    const lineEnd = value.indexOf("\n", end);
-    const actualLineEnd = lineEnd === -1 ? value.length : lineEnd;
-
-    const selectedText = value.substring(lineStart, actualLineEnd);
+    const selectedText = textarea.value.substring(start, end);
 
     // Remove existing heading markers
     const newText = selectedText.replace(/^#+\s*/, "");
 
-    textarea.value =
-      value.substring(0, lineStart) + newText + value.substring(actualLineEnd);
-
-    textarea.selectionStart = lineStart;
-    textarea.selectionEnd = lineStart + newText.length;
+    textarea.setRangeText(newText, start, end, "select");
 
     textarea.dispatchEvent(new Event("input"));
     textarea.focus();
@@ -581,36 +454,23 @@
     const textarea = document.getElementById("editor-textarea");
     const markdownText = textarea.value;
 
-    // Convert Markdown to HTML using Marked.js
-    const htmlContent = marked(markdownText);
+    // Convert Markdown to HTML using Showdown
+    const htmlContent = converter.makeHtml(markdownText);
 
-    // Split the HTML content into lines
-    const lines = htmlContent.split("\n");
+    // Replace line breaks with <br />
+    const htmlWithLineBreaks = htmlContent.replace(/\n/g, "<br />");
 
-    // Wrap each line with [code] and [/code]
-    const wrappedLines = lines.map((line) => `[code]${line}[/code]`);
+    // Wrap the entire HTML content with [code] and [/code]
+    const result = `[code]${htmlWithLineBreaks}[/code]`;
 
-    // Join the lines back together
-    const result = wrappedLines.join("\n");
-
-    // Create a temporary textarea to hold the text
-    const tempTextarea = document.createElement("textarea");
-    tempTextarea.value = result;
-    document.body.appendChild(tempTextarea);
-
-    // Select the text
-    tempTextarea.select();
-    tempTextarea.setSelectionRange(0, tempTextarea.value.length);
-
-    // Copy the text
-    try {
-      document.execCommand("copy");
-      alert("Copied to clipboard.");
-    } catch (err) {
-      alert("Failed to copy text.");
-    }
-
-    // Remove the temporary textarea
-    document.body.removeChild(tempTextarea);
+    // Copy the result to the clipboard
+    navigator.clipboard.writeText(result).then(
+      function () {
+        alert("Copied to clipboard.");
+      },
+      function (err) {
+        alert("Could not copy text: " + err);
+      }
+    );
   }
 </script>
