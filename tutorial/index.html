@@ -1,0 +1,127 @@
+---
+title: Tutorial
+layout: skeleton
+---
+
+<div class="container pt-3 mb-5 pb-5">
+  <h1><i class="bi bi-question-circle"></i> Tutorial</h1>
+  <hr />
+  <div class="container" style="max-width: 1000px">
+    <h2>Overview</h2>
+    <p>
+      In a time long long ago in a room not far away, in a time when dinosaurs
+      roamed the earth, <code>sc_alexp</code> learned from
+      <code>sc_nickv</code> that ServiceNow is able to
+      <b>parse HTML in the Additonal comments/Work notes fields</b>!
+    </p>
+    <p>
+      It is not able to do it with no help, however! <i>There is a trick!</i>
+    </p>
+    <p>
+      In order for ServiceNow to parse the html in a message, it must be
+      surrounded by the proper tags.
+    </p>
+    <br />
+    <p>HTML that will not be rendered in Additonal comments:</p>
+    <div class="text-monospace border bg-body-tertiary rounded p-3">
+      &lt;a href=&quot;https://iastate.edu/&quot;&gt;Iowa State
+      University&lt;/a&gt;
+    </div>
+    <br />
+    <p>
+      HTML that <b><i>will</i></b> be rendered in Additonal comments:
+    </p>
+    <div class="text-monospace border bg-body-tertiary rounded p-3">
+      <b>[code]</b>&lt;a href=&quot;https://iastate.edu/&quot;&gt;Iowa State
+      University&lt;/a&gt;<b>[/code]</b>
+    </div>
+    <br /><br />
+    <p><i>"Well that's cool and all, but I don't know HTML"</i></p>
+    <p>I have good news for you! <b>That is what this tool is for!!</b></p>
+    <br /><br />
+    <h2>Formatting your response for a ticket</h2>
+    <p>
+      At the main page of this site, you will find the editor. You can change
+      how it arranged using the <i class="bi bi-square"></i> and
+      <i class="bi bi-layout-split"></i> buttons at the bottom. Either way your
+      screen will be split into two halves.
+    </p>
+    <h3>The Preview</h3>
+    <p>
+      You will never interact with the preview, but it is a good indicator of
+      what your response will look like to the customer. It updates in real time
+      as you edit your response.
+    </p>
+    <p>
+      Given that this is a different website with different code than
+      ServiceNow, it may not be 100% accurate in every case but I have found
+      that it is very reliable. It may also change over time as ServiceNow
+      updates but use your own discretion.
+    </p>
+    <h3>The Editor</h3>
+    <p>
+      The star of the show. The editor in this tool is basically a fancy custom
+      <a href="https://www.markdownguide.org/getting-started/" target="_blank"
+        >markdown</a
+      >
+      parser. The buttons will apply markdown syntax (whenever possible) and you
+      will see the rendered result in the preview.
+    </p>
+    <div class="alert alert-danger d-flex align-items-center" role="alert">
+      <i class="bi bi-exclamation-triangle-fill"></i>
+      <div class="ms-3">
+        <b>Never</b> copy or paste directly from the editor or the preview. This
+        will result in your message not being rendered correctly and being
+        <b>confusing for the caller</b>.
+      </div>
+    </div>
+    <p>
+      When you are ready to copy your message into a ticket, always use the
+      green
+      <span class="fw-bold text-success"
+        ><i class="bi bi-clipboard"></i> Copy for Ticket</span
+      >
+      button. This will properly format your response so that ServiceNow renders
+      it to the caller.
+    </p>
+    <h4>Buttons</h4>
+    <p>
+      For most buttons with the text you want to alter, you first
+      <b>select the text</b> and then click the button to alter it how you want,
+      the same as you would in any normal text editor. I recommend you
+      experiment, try adding a link, try bolding text.
+    </p>
+    <br />
+    <h2>Templates</h2>
+    <p>
+      To better standardize and increase quickness in response times, there are
+      a few basic templates that define basic formats for replies and work
+      notes. You can find these by clicking
+      <a href="/templates" target="_blank"
+        ><i class="bi bi-file-earmark-text"></i> Templates</a
+      >
+      in the navbar at the top of the page.
+    </p>
+    <p>
+      Find the template you want, and click <b>Use this Template</b>. This will
+      take you back to the editor with the template autofilled and ready for you
+      to edit!
+    </p>
+    <p>
+      If you refresh, it will reapply the template but remove your changes. To
+      get rid of the template, simply click the
+      <i class="bi bi-x-lg"></i> button to clear the text field and current set
+      template.
+    </p>
+    <p>
+      If you have any template ideas, let me know!
+      <i
+        >Note these templates will never have any information of substance in
+        them, and they are only for basic formatting of responses.</i
+      >
+    </p>
+    <br /><br /><br />
+    <h1 class="text-center">Happy formatting!</h1>
+    <p class="text-center text-secondary"><i>~sc_alexp</i></p>
+  </div>
+</div>
