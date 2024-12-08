@@ -1,1 +1,146 @@
-<div class="w-100 h-100 bg-success">Slide 3</div>
+<div class="w-100 h-100 bg-black position-relative">
+  <div class="position-absolute top-0 start-50 translate-middle-x container">
+    <div class="w-100 d-flex justify-content-center">
+      <div
+        id="up-status"
+        class="d-flex flex-column p-3 m-3 justify-content-center align-items-center"
+        style="width: 200px"
+      >
+        <span
+          id="up-count"
+          style="font-size: 150px"
+          class="fw-bold text-center text-success"
+          >?</span
+        >
+        <span class="fw-bold">UP</span>
+      </div>
+      <div
+        id="affected-status"
+        class="d-flex flex-column p-3 m-3 justify-content-center align-items-center"
+        style="width: 200px"
+      >
+        <span
+          id="affected-count"
+          style="font-size: 150px"
+          class="fw-bold text-center text-success"
+          >?</span
+        >
+        <span class="fw-bold">AFFECTED</span>
+      </div>
+      <div
+        id="down-status"
+        class="d-flex flex-column p-3 m-3 justify-content-center align-items-center"
+        style="width: 200px"
+      >
+        <span
+          id="down-count"
+          style="font-size: 150px"
+          class="fw-bold text-center text-success"
+          >?</span
+        >
+        <span class="fw-bold">DOWN</span>
+      </div>
+    </div>
+    <div class="text-secondary w-100 text-center" id="last-queried-time">
+      ERROR
+    </div>
+    <hr />
+    <div id="maintenance-container" class="container"></div>
+  </div>
+</div>
+
+<script>
+  // Function to fetch and update status counters
+  function updateStatusCounters() {
+    const statusApiUrl = `https://corsproxy.io/?https://status.it.iastate.edu/api/statuses?timestamp=${new Date().getTime()}`;
+
+    fetch(statusApiUrl)
+      .then((response) => response.json())
+      .then((data) => {
+        // Update the UP, AFFECTED, and DOWN counters
+        const upCount = document.getElementById("up-count");
+        const affectedCount = document.getElementById("affected-count");
+        const downCount = document.getElementById("down-count");
+
+        upCount.textContent = data.counters.count_status_1;
+        affectedCount.textContent = data.counters.count_status_2;
+        downCount.textContent = data.counters.count_status_3;
+
+        // Update classes based on count
+        updateClass(affectedCount, data.counters.count_status_2);
+        updateClass(downCount, data.counters.count_status_3);
+
+        // Update the timestamp
+        updateLastQueriedTime();
+      })
+      .catch((error) => console.error("Error fetching status data:", error));
+  }
+
+  // Function to fetch and update maintenance cards
+  function updateMaintenanceCards() {
+    const maintenanceApiUrl = `https://corsproxy.io/?https://status.it.iastate.edu/api/future_maintenances?timestamp=${new Date().getTime()}`;
+
+    fetch(maintenanceApiUrl)
+      .then((response) => response.json())
+      .then((data) => {
+        const container = document.getElementById("maintenance-container");
+        container.innerHTML = ""; // Clear existing cards
+
+        data.forEach((maintenance) => {
+          const card = document.createElement("div");
+          card.className = "card my-3";
+
+          card.innerHTML = `
+              <div class="card-header">Upcoming Scheduled Maintenance</div>
+              <div class="card-body">
+                <h5 class="card-title fs-1">
+                  <i class="bi bi-tools text-warning"></i> ${maintenance.title}
+                </h5>
+                <p class="card-text text-secondary">
+                  ${maintenance.timestamp_start_short_formatted} - ${maintenance.timestamp_end_short_formatted}
+                </p>
+              </div>
+            `;
+
+          container.appendChild(card);
+        });
+      })
+      .catch((error) =>
+        console.error("Error fetching maintenance data:", error)
+      );
+  }
+
+  // Function to update the class of elements based on count
+  function updateClass(element, count) {
+    if (count > 0) {
+      element.classList.remove("text-success");
+      element.classList.add("text-danger");
+    } else {
+      element.classList.remove("text-danger");
+      element.classList.add("text-success");
+    }
+  }
+
+  // Function to update the last queried time
+  function updateLastQueriedTime() {
+    const now = new Date();
+    const hours = now.getHours() % 12 || 12; // Convert to 12-hour format
+    const minutes = now.getMinutes().toString().padStart(2, "0"); // Ensure two-digit format
+    const ampm = now.getHours() >= 12 ? "PM" : "AM";
+    const formattedTime = `Last updated: ${hours}:${minutes} ${ampm}`;
+    document.getElementById("last-queried-time").textContent = formattedTime;
+  }
+
+  // Initialize updates and set interval
+  function initializeUpdates() {
+    updateStatusCounters();
+    updateMaintenanceCards();
+    setInterval(() => {
+      updateStatusCounters();
+      updateMaintenanceCards();
+    }, 30000); // Update every 30 seconds
+  }
+
+  // Start the process once the DOM is fully loaded
+  document.addEventListener("DOMContentLoaded", initializeUpdates);
+</script>
