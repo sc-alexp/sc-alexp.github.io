@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <meta charset="UTF-8" />
+  <title>{{ page.title }} | {{ site.title }}</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link
+    rel="icon"
+    type="image/x-icon"
+    href="{{ site.url }}/assets/img/sc_alexp.svg"
+  />
+  <link rel="stylesheet" href="{{ site.url }}/assets/css/style.css" />
+  <body style="height: 100vh" data-bs-theme="dark">
+    <div
+      class="w-100 d-flex justify-content-between align-items-center"
+      style="border-bottom: 1px solid #c8102e; cursor: none; user-select: none"
+    >
+      <div class="fs-1 fw-bold d-flex align-items-center">
+        <img
+          src="{{ site.url }}/assets/img/IT Logo.svg"
+          height="75px"
+        />&nbsp;&nbsp;Solution Center
+      </div>
+      <span id="clock" class="fs-1 fw-bold mx-3">ERROR</span>
+      <script>
+        // Function to update the clock
+        function updateClock() {
+          const clockElement = document.getElementById("clock");
+          const now = new Date();
+
+          // Format hours and minutes
+          let hours = now.getHours();
+          const minutes = now.getMinutes();
+          const isAM = hours < 12;
+
+          // Convert to 12-hour format
+          hours = hours % 12 || 12; // 0 hour should display as 12
+
+          // Format time string
+          const timeString = `${hours}:${minutes.toString().padStart(2, "0")} ${
+            isAM ? "AM" : "PM"
+          }`;
+
+          // Update the clock element
+          clockElement.textContent = timeString;
+        }
+
+        // Update the clock immediately and set it to update every second
+        updateClock();
+        setInterval(updateClock, 1000);
+      </script>
+    </div>
+    {{ content }}
+    <script src="{{ site.url }}/assets/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
