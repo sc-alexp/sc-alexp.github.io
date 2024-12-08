@@ -1,16 +1,91 @@
-<div class="w-100 h-100 bg-black position-relative">
-  <div class="container pt-3">
-    <div class="w-100 d-flex justify-content-between align-items-center">
-      <h1>CyRide Arrival Times</h1>
-      <h5 class="text-secondary" id="last-checked">ERROR</h5>
-    </div>
-    <hr />
-    <div class="w-100 h-100 overflow-y-auto" id="arrivals-container">
-      <div id="cards-container">
-        <!-- Cards will be inserted here by JavaScript -->
+<!DOCTYPE html>
+<!-- This was made by sc_alexp :) -->
+<html lang="en">
+  <head>
+    <!-- Meta and Title -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>SC_FALL</title>
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    />
+    <!-- Bootstrap Icons CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    />
+    <!-- Custom CSS -->
+    <style>
+      /* Ensure that the columns do not exceed the height of the viewport */
+      .col {
+        height: 100vh; /* Full viewport height */
+        overflow-y: auto; /* Enable vertical scrolling if content exceeds height */
+      }
+    </style>
+  </head>
+  <body data-bs-theme="dark">
+    <div class="container-fluid vh-100">
+      <div class="row h-100">
+        <!-- Left Half -->
+        <div class="col p-3">
+          <div
+            class="w-100 h-100 border rounded-4 shadow p-3 overflow-y-auto"
+            id="arrivals-container"
+          >
+            <h1 class="text-center">
+              <i class="bi bi-bus-front"></i> CyRide Arrivals
+            </h1>
+            <h5 class="text-secondary text-center" id="last-checked">
+              Last Checked 4:24 PM
+            </h5>
+            <hr />
+            <div id="cards-container">
+              <!-- Cards will be inserted here by JavaScript -->
+            </div>
+          </div>
+        </div>
+        <!-- Right Half -->
+        <div class="col p-3">
+          <div
+            class="w-100 h-100 border rounded-4 shadow p-3 position-relative overflow-hidden"
+          >
+            <div
+              class="position-absolute top-50 start-50 translate-middle text-center"
+            >
+              <img
+                src="https://theuselessweb.site/chihuahuaspin/spin.gif"
+                width="400vw"
+                class="m-4"
+              />
+              <h1 class="text-warning">Happy sc_fall!</h1>
+            </div>
+            <img
+              src="https://upload.wikimedia.org/wikipedia/commons/b/bb/Design-fall.svg"
+              style=""
+              width="400px"
+              class="position-absolute bottom-0 top-0"
+            />
+            <img
+              src="https://upload.wikimedia.org/wikipedia/commons/c/c5/202311_Wild_turkey.svg"
+              width="250px"
+              style="transform: translateX(100px)"
+              class="position-absolute bottom-0 start-50"
+            />
+          </div>
+        </div>
       </div>
     </div>
-
+    <!-- Include Bootstrap JS -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+      crossorigin="anonymous"
+    ></script>
+    <!-- Your JavaScript Code -->
     <script>
       // Array of stops to query
       const stops = [
@@ -178,5 +253,5 @@
       // Update arrivals every minute
       setInterval(updateArrivals, 60000);
     </script>
-  </div>
-</div>
+  </body>
+</html>
