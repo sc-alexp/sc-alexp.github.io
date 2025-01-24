@@ -136,7 +136,9 @@
               </div>
               <div class="card-body">
                 <h5 class="card-title fs-1">
-                  <i class="bi bi-exclamation-triangle text-warning"></i>
+                  <i class="bi bi-exclamation-triangle ${
+                    service.status === 2 ? "text-warning" : "text-danger"
+                  }"></i>
                   ${service.service_name}
                 </h5>
               </div>
