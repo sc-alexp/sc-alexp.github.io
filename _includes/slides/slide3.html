@@ -1,5 +1,6 @@
 <div class="w-100 h-100 bg-black position-relative">
   <div class="position-absolute top-0 start-50 translate-middle-x container">
+    <!-- Status Counters -->
     <div class="w-100 d-flex justify-content-center">
       <div
         id="up-status"
@@ -41,76 +42,41 @@
         <span class="fw-bold">DOWN</span>
       </div>
     </div>
+
+    <!-- Last Queried Time -->
     <div class="text-secondary w-100 text-center" id="last-queried-time">
       ERROR
     </div>
     <hr />
+
+    <!-- Single container for Affected/Down services, Maintenances, Incidents -->
     <div id="maintenance-container" class="container"></div>
   </div>
 </div>
 
 <script>
-  // Function to fetch and update status counters
-  function updateStatusCounters() {
-    const statusApiUrl = `https://corsproxy.io/?https://status.it.iastate.edu/api/statuses?timestamp=${new Date().getTime()}`;
+  // API endpoints (proxied via corsproxy.io)
+  const statusApiUrl = `https://corsproxy.io/?https://status.it.iastate.edu/api/statuses?timestamp=${new Date().getTime()}`;
+  const maintenanceApiUrl = `https://corsproxy.io/?https://status.it.iastate.edu/api/future_maintenances?timestamp=${new Date().getTime()}`;
+  const incidentsApiUrl = `https://corsproxy.io/?https://status.it.iastate.edu/api/incidents?timestamp=${new Date().getTime()}`;
 
-    fetch(statusApiUrl)
-      .then((response) => response.json())
-      .then((data) => {
-        // Update the UP, AFFECTED, and DOWN counters
-        const upCount = document.getElementById("up-count");
-        const affectedCount = document.getElementById("affected-count");
-        const downCount = document.getElementById("down-count");
+  // Update the UP / AFFECTED / DOWN counts (top of screen)
+  function updateStatusCounters(statusData) {
+    const upCountEl = document.getElementById("up-count");
+    const affectedCountEl = document.getElementById("affected-count");
+    const downCountEl = document.getElementById("down-count");
 
-        upCount.textContent = data.counters.count_status_1;
-        affectedCount.textContent = data.counters.count_status_2;
-        downCount.textContent = data.counters.count_status_3;
+    // Read counters from the fetched status data
+    upCountEl.textContent = statusData.counters.count_status_1;
+    affectedCountEl.textContent = statusData.counters.count_status_2;
+    downCountEl.textContent = statusData.counters.count_status_3;
 
-        // Update classes based on count
-        updateClass(affectedCount, data.counters.count_status_2);
-        updateClass(downCount, data.counters.count_status_3);
-
-        // Update the timestamp
-        updateLastQueriedTime();
-      })
-      .catch((error) => console.error("Error fetching status data:", error));
+    // Update colors (text-success vs text-danger) based on whether there's a nonzero count
+    updateClass(affectedCountEl, statusData.counters.count_status_2);
+    updateClass(downCountEl, statusData.counters.count_status_3);
   }
 
-  // Function to fetch and update maintenance cards
-  function updateMaintenanceCards() {
-    const maintenanceApiUrl = `https://corsproxy.io/?https://status.it.iastate.edu/api/future_maintenances?timestamp=${new Date().getTime()}`;
-
-    fetch(maintenanceApiUrl)
-      .then((response) => response.json())
-      .then((data) => {
-        const container = document.getElementById("maintenance-container");
-        container.innerHTML = ""; // Clear existing cards
-
-        data.forEach((maintenance) => {
-          const card = document.createElement("div");
-          card.className = "card my-3";
-
-          card.innerHTML = `
-              <div class="card-header">Upcoming Scheduled Maintenance</div>
-              <div class="card-body">
-                <h5 class="card-title fs-1">
-                  <i class="bi bi-tools text-warning"></i> ${maintenance.title}
-                </h5>
-                <p class="card-text text-secondary">
-                  ${maintenance.timestamp_start_short_formatted} - ${maintenance.timestamp_end_short_formatted}
-                </p>
-              </div>
-            `;
-
-          container.appendChild(card);
-        });
-      })
-      .catch((error) =>
-        console.error("Error fetching maintenance data:", error)
-      );
-  }
-
-  // Function to update the class of elements based on count
+  // Update the class of elements based on count (turns text red if > 0)
   function updateClass(element, count) {
     if (count > 0) {
       element.classList.remove("text-success");
@@ -121,26 +87,118 @@
     }
   }
 
-  // Function to update the last queried time
+  // Update the "Last updated: HH:MM AM/PM" text
   function updateLastQueriedTime() {
     const now = new Date();
     const hours = now.getHours() % 12 || 12; // Convert to 12-hour format
-    const minutes = now.getMinutes().toString().padStart(2, "0"); // Ensure two-digit format
+    const minutes = now.getMinutes().toString().padStart(2, "0");
     const ampm = now.getHours() >= 12 ? "PM" : "AM";
-    const formattedTime = `Last updated: ${hours}:${minutes} ${ampm}`;
-    document.getElementById("last-queried-time").textContent = formattedTime;
+    document.getElementById(
+      "last-queried-time"
+    ).textContent = `Last updated: ${hours}:${minutes} ${ampm}`;
   }
 
-  // Initialize updates and set interval
+  // Main function that fetches everything and displays in a single list
+  async function updateDisplay() {
+    // Clear the container first
+    const container = document.getElementById("maintenance-container");
+    container.innerHTML = "";
+
+    try {
+      // Fetch all data in parallel
+      const [statusRes, maintRes, incidentRes] = await Promise.all([
+        fetch(statusApiUrl),
+        fetch(maintenanceApiUrl),
+        fetch(incidentsApiUrl),
+      ]);
+
+      const [statusData, maintenanceData, incidentData] = await Promise.all([
+        statusRes.json(),
+        maintRes.json(),
+        incidentRes.json(),
+      ]);
+
+      // 1) Update counters with status data
+      updateStatusCounters(statusData);
+      updateLastQueriedTime();
+
+      // 2) Add any services that are status 2 (affected) or 3 (down)
+      //    in the same container
+      statusData.groups.forEach((group) => {
+        group.services.forEach((service) => {
+          if (service.status === 2 || service.status === 3) {
+            // Create a card for each affected/down service
+            const card = document.createElement("div");
+            card.className = "card my-3";
+            card.innerHTML = `
+              <div class="card-header">
+                ${service.status === 2 ? "Affected" : "Down"}
+              </div>
+              <div class="card-body">
+                <h5 class="card-title fs-1">
+                  <i class="bi bi-exclamation-triangle text-warning"></i>
+                  ${service.service_name}
+                </h5>
+              </div>
+            `;
+            container.appendChild(card);
+          }
+        });
+      });
+
+      // 3) Add scheduled maintenance items
+      if (Array.isArray(maintenanceData) && maintenanceData.length > 0) {
+        maintenanceData.forEach((maintenance) => {
+          const card = document.createElement("div");
+          card.className = "card my-3";
+          card.innerHTML = `
+            <div class="card-header">Scheduled Maintenance</div>
+            <div class="card-body">
+              <h5 class="card-title fs-1">
+                <i class="bi bi-tools text-warning"></i> ${maintenance.title}
+              </h5>
+              <p class="card-text text-secondary">
+                ${maintenance.timestamp_start_short_formatted} - ${maintenance.timestamp_end_short_formatted}
+              </p>
+            </div>
+          `;
+          container.appendChild(card);
+        });
+      }
+
+      // 4) Add incidents if any
+      if (Array.isArray(incidentData) && incidentData.length > 0) {
+        incidentData.forEach((incident) => {
+          const card = document.createElement("div");
+          card.className = "card my-3";
+          card.innerHTML = `
+            <div class="card-header">Incident</div>
+            <div class="card-body">
+              <h5 class="card-title fs-1">
+                <i class="bi bi-exclamation-triangle text-warning"></i>
+                ${incident.title}
+              </h5>
+              <!-- Example of showing the start time. Adjust if you like. -->
+              <p class="card-text text-secondary">
+                Started: ${new Date(
+                  incident.timestamp_start * 1000
+                ).toLocaleString()}
+              </p>
+            </div>
+          `;
+          container.appendChild(card);
+        });
+      }
+    } catch (err) {
+      console.error("Error fetching data:", err);
+    }
+  }
+
+  // Set up periodic refresh
   function initializeUpdates() {
-    updateStatusCounters();
-    updateMaintenanceCards();
-    setInterval(() => {
-      updateStatusCounters();
-      updateMaintenanceCards();
-    }, 30000); // Update every 30 seconds
+    updateDisplay(); // initial load
+    setInterval(updateDisplay, 30000); // refresh every 30 seconds
   }
 
-  // Start the process once the DOM is fully loaded
   document.addEventListener("DOMContentLoaded", initializeUpdates);
 </script>
