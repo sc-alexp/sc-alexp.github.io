@@ -1,4 +1,4 @@
-let speed = 5;
+let speed = 1;
 let scale = 0.2; // Image scale (I work on 1080p monitor)
 let canvas;
 let ctx;
