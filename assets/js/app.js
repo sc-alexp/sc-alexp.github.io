@@ -1,22 +1,21 @@
-let speed = 20;
+let speed = 25;
 let scale = 0.4; // Image scale (I work on 1080p monitor)
 let canvas;
 let ctx;
 let logoColor;
 
-let dvd = {
-    x: 200,
-    y: 300,
-    xspeed: 10,
-    yspeed: 10,
-    img: new Image(),
-    flip: false // Flag to track horizontal flip state
-};
+let layers = [
+    { x: 200, y: 100, xspeed: 10, yspeed: 10, img: new Image(), flip: false },
+    { x: 200, y: 300, xspeed: 10, yspeed: 10, img: new Image(), flip: false }, // Middle layer
+    { x: 200, y: 500, xspeed: 10, yspeed: 10, img: new Image(), flip: false }
+];
 
 (function main() {
     canvas = document.getElementById("tv-screen");
     ctx = canvas.getContext("2d");
-    dvd.img.src = 'SCDVD (1).png';
+    layers[0].img.src = 'layer1.png'; // Image for layer 1
+    layers[1].img.src = 'layer2.png'; // Image for layer 2
+    layers[2].img.src = 'layer3.png'; // Image for layer 3
 
     // Draw the "tv screen"
     canvas.width = window.innerWidth;
@@ -32,50 +31,59 @@ function update() {
         ctx.fillStyle = '#000';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        // Draw the DVD logo with flipping logic
-        ctx.fillStyle = logoColor;
-        ctx.fillRect(dvd.x, dvd.y, dvd.img.width * scale, dvd.img.height * scale);
+        // Loop through all layers to draw them
+        layers.forEach(layer => {
+            ctx.fillStyle = logoColor;
+            ctx.fillRect(layer.x, layer.y, layer.img.width * scale, layer.img.height * scale);
 
-        if (dvd.flip) {
-            // Draw the image flipped horizontally
-            ctx.save(); // Save the current canvas state
-            ctx.scale(-1, 1); // Flip horizontally
-            ctx.drawImage(dvd.img, -dvd.x - dvd.img.width * scale, dvd.y, dvd.img.width * scale, dvd.img.height * scale);
-            ctx.restore();
-        } else {
-            // Draw the image normally
-            ctx.drawImage(dvd.img, dvd.x, dvd.y, dvd.img.width * scale, dvd.img.height * scale);
-        }
+            if (layer.flip) {
+                // Flip the middle layer horizontally
+                ctx.save(); // Save the current canvas state
+                ctx.scale(-1, 1); // Flip horizontally
+                ctx.drawImage(layer.img, -layer.x - layer.img.width * scale, layer.y, layer.img.width * scale, layer.img.height * scale);
+                ctx.restore();
+            } else {
+                // Draw the image normally
+                ctx.drawImage(layer.img, layer.x, layer.y, layer.img.width * scale, layer.img.height * scale);
+            }
 
-        // Move the logo
-        dvd.x += dvd.xspeed;
-        dvd.y += dvd.yspeed;
+            // Move the logo
+            layer.x += layer.xspeed;
+            layer.y += layer.yspeed;
+        });
 
-        // Check for collision 
+        // Check for collision
         checkHitBox();
         update();
     }, speed);
 }
 
-// Check for border collision
+// Check for border collision for all layers
 function checkHitBox() {
-    if (dvd.x + dvd.img.width * scale >= canvas.width || dvd.x <= 0) {
-        dvd.xspeed *= -1;
-        dvd.flip = !dvd.flip; // Toggle the flip state when hitting a horizontal edge
-        pickColor();
-    }
+    layers.forEach(layer => {
+        if (layer.x + layer.img.width * scale >= canvas.width || layer.x <= 0) {
+            layer.xspeed *= -1;
 
-    if (dvd.y + dvd.img.height * scale >= canvas.height || dvd.y <= 0) {
-        dvd.yspeed *= -1;
-        pickColor();
-    }
+            // Flip only the middle layer (layer2)
+            if (layer === layers[1]) {
+                layer.flip = !layer.flip;
+            }
+
+            pickColor();
+        }
+
+        if (layer.y + layer.img.height * scale >= canvas.height || layer.y <= 0) {
+            layer.yspeed *= -1;
+            pickColor();
+        }
+    });
 }
 
 // Pick a random color in RGB format
 function pickColor() {
-    r = Math.random() * (254 - 0) + 0;
-    g = Math.random() * (254 - 0) + 0;
-    b = Math.random() * (254 - 0) + 0;
+    let r = Math.random() * (254 - 0) + 0;
+    let g = Math.random() * (254 - 0) + 0;
+    let b = Math.random() * (254 - 0) + 0;
 
     logoColor = 'rgb(' + r + ',' + g + ', ' + b + ')';
 }
