@@ -15,14 +15,17 @@ let dvd = {
 (function main() {
   canvas = document.getElementById("tv-screen");
   ctx = canvas.getContext("2d");
+
+  // Set the image source and ensure it's loaded
   dvd.img.src = "allen.png";
+  
+  // Wait for the image to load before starting the animation
+  dvd.img.onload = function() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight - 82.875;
 
-  // Draw the "tv screen"
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight - 82.875;
-
-  /* pickColor(); */
-  update();
+    update();
+  };
 })();
 
 function update() {
@@ -31,7 +34,7 @@ function update() {
     ctx.fillStyle = "#000";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // ========== DRAW THE LOGO WITH A COLORED TINT ==========
+    // ========== DRAW THE LOGO WITH A COLORED TINT ===========
     // 1. Save the current canvas state
     ctx.save();
 
