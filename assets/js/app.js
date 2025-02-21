@@ -36,8 +36,8 @@ function update() {
     ctx.save();
 
     // 2. Fill an area where the logo will appear with your random color
-    ctx.fillStyle = logoColor;
-    ctx.fillRect(dvd.x, dvd.y, dvd.img.width * scale, dvd.img.height * scale);
+    /* ctx.fillStyle = logoColor;
+    ctx.fillRect(dvd.x, dvd.y, dvd.img.width * scale, dvd.img.height * scale); */
 
     // 3. Change the globalCompositeOperation so that drawing the image
     //    only keeps the area of the existing fill where the image is opaque.
