@@ -1,4 +1,4 @@
-let speed = 20;
+let speed = 30;
 let scale = 0.2; // Image scale (I work on 1080p monitor)
 let canvas;
 let ctx;
@@ -20,7 +20,7 @@ let dvd = {
 
     // Draw the "tv screen"
     canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    canvas.height = window.innerHeight - 76;
 
     pickColor();
     update();
