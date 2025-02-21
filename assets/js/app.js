@@ -2,12 +2,11 @@ let speed = 25;
 let scale = 0.4; // Image scale (I work on 1080p monitor)
 let canvas;
 let ctx;
-let logoColor;
 
 let layers = [
-    { x: 200, y: 100, xspeed: 10, yspeed: 10, img: new Image(), flip: false },
+    { x: 200, y: 300, xspeed: 10, yspeed: 10, img: new Image(), flip: false },
     { x: 200, y: 300, xspeed: 10, yspeed: 10, img: new Image(), flip: false }, // Middle layer
-    { x: 200, y: 500, xspeed: 10, yspeed: 10, img: new Image(), flip: false }
+    { x: 200, y: 300, xspeed: 10, yspeed: 10, img: new Image(), flip: false }
 ];
 
 (function main() {
@@ -21,21 +20,16 @@ let layers = [
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight - 76;
 
-    pickColor();
     update();
 })();
 
 function update() {
     setTimeout(() => {
-        // Draw the canvas background
-        ctx.fillStyle = '#000';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        // Draw the canvas background (keeping it black/transparent)
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
 
         // Loop through all layers to draw them
         layers.forEach(layer => {
-            ctx.fillStyle = logoColor;
-            ctx.fillRect(layer.x, layer.y, layer.img.width * scale, layer.img.height * scale);
-
             if (layer.flip) {
                 // Flip the middle layer horizontally
                 ctx.save(); // Save the current canvas state
@@ -68,22 +62,10 @@ function checkHitBox() {
             if (layer === layers[1]) {
                 layer.flip = !layer.flip;
             }
-
-            pickColor();
         }
 
         if (layer.y + layer.img.height * scale >= canvas.height || layer.y <= 0) {
             layer.yspeed *= -1;
-            pickColor();
         }
     });
-}
-
-// Pick a random color in RGB format
-function pickColor() {
-    let r = Math.random() * (254 - 0) + 0;
-    let g = Math.random() * (254 - 0) + 0;
-    let b = Math.random() * (254 - 0) + 0;
-
-    logoColor = 'rgb(' + r + ',' + g + ', ' + b + ')';
 }
