@@ -21,7 +21,7 @@ let dvd = {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight - 82.875;
 
-  pickColor();
+  /* pickColor(); */
   update();
 })();
 
